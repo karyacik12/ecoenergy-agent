@@ -26,3 +26,115 @@ EcoEnergy Agent simplifies and accelerates access to green energy, helping organ
 
 ## License
 MIT License
+
+
+ecoenergy-agent/
+│
+├─ app.py
+├─ mock_data.json
+├─ requirements.txt
+└─ templates/
+    └─ index.html
+
+[
+  {
+    "provider": "EKOenergy",
+    "type": "Solar",
+    "price_per_mwh": 50,
+    "esg_score": 95
+  },
+  {
+    "provider": "I-REC",
+    "type": "Wind",
+    "price_per_mwh": 45,
+    "esg_score": 90
+  },
+  {
+    "provider": "GOO",
+    "type": "Hydro",
+    "price_per_mwh": 40,
+    "esg_score": 85
+  }
+]
+
+from flask import Flask, render_template, request, jsonify
+import json
+
+app = Flask(__name__)
+
+# Mock veri yükle
+with open('mock_data.json', 'r') as f:
+    providers = json.load(f)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    energy_need = float(request.form.get('energy'))
+    budget = float(request.form.get('budget'))
+
+    # Basit puanlama algoritması: fiyat + esg skoruna göre seçim
+    scored = []
+    for p in providers:
+        score = p['esg_score'] - p['price_per_mwh']
+        if p['price_per_mwh'] * energy_need <= budget:
+            scored.append({**p, 'score': score})
+
+    # Skora göre sırala ve en iyi 2 sonucu al
+    top = sorted(scored, key=lambda x: x['score'], reverse=True)[:2]
+    return jsonify(top)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EcoEnergy Agent Demo</title>
+</head>
+<body>
+    <h1>EcoEnergy Agent</h1>
+    <form id="form">
+        <label>Energy Need (MWh/year):</label>
+        <input type="number" name="energy" required><br><br>
+
+        <label>Budget (€):</label>
+        <input type="number" name="budget" required><br><br>
+
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <h2>Top Recommendations:</h2>
+    <ul id="results"></ul>
+
+    <script>
+        const form = document.getElementById('form');
+        const results = document.getElementById('results');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            results.innerHTML = '';
+            const formData = new FormData(form);
+            const response = await fetch('/recommend', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.provider} - ${item.type} - €${item.price_per_mwh}/MWh - ESG: ${item.esg_score}`;
+                results.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+Flask==2.3.2
+
+
+
+
