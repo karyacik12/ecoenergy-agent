@@ -164,6 +164,8 @@ Welcome to the EcoEnergy Agent demo! Here’s how to showcase the project during
    - Easily expandable to real APIs for global certificates
 
 
+print("EcoEnergy Agent is running...")
+
 
 
 
