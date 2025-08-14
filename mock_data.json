@@ -1,0 +1,20 @@
+[
+  {
+    "provider": "EKOenergy",
+    "type": "Solar",
+    "price_per_mwh": 50,
+    "esg_score": 95
+  },
+  {
+    "provider": "I-REC",
+    "type": "Wind",
+    "price_per_mwh": 45,
+    "esg_score": 90
+  },
+  {
+    "provider": "GOO",
+    "type": "Hydro",
+    "price_per_mwh": 40,
+    "esg_score": 85
+  }
+]
