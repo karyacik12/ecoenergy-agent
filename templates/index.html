@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EcoEnergy Agent Demo</title>
+</head>
+<body>
+    <h1>EcoEnergy Agent</h1>
+    <form id="form">
+        <label>Energy Need (MWh/year):</label>
+        <input type="number" name="energy" required><br><br>
+
+        <label>Budget (€):</label>
+        <input type="number" name="budget" required><br><br>
+
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <h2>Top Recommendations:</h2>
+    <ul id="results"></ul>
+
+    <script>
+        const form = document.getElementById('form');
+        const results = document.getElementById('results');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            results.innerHTML = '';
+            const formData = new FormData(form);
+            const response = await fetch('/recommend', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.provider} - ${item.type} - €${item.price_per_mwh}/MWh - ESG: ${item.esg_score}`;
+                results.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
