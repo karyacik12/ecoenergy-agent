@@ -136,5 +136,34 @@ if __name__ == '__main__':
 Flask==2.3.2
 
 
+# EcoEnergy Agent Demo
+
+## Quick Demo Guide
+
+Welcome to the EcoEnergy Agent demo! Here’s how to showcase the project during the hackathon:
+
+1. **Open the Web Interface**
+   - Go to `http://127.0.0.1:5000/` after running `app.py`.
+   
+2. **Enter User Inputs**
+   - Fill in your energy need (MWh/year) and budget (€).
+   - Click “Get Recommendations”.
+
+3. **AI Agent in Action**
+   - The agent filters mock global providers.
+   - It scores each provider based on ESG rating and price.
+   - Top 2 recommendations are displayed in real-time.
+
+4. **Explain the Concept**
+   - EcoEnergy Agent automates renewable energy certificate purchases.
+   - It reduces manual research, helps users choose the most sustainable option, and manages certificate renewal.
+
+5. **Hackathon Highlights**
+   - Fully interactive AI-powered demo
+   - Simple web interface for live interaction
+   - Easily expandable to real APIs for global certificates
+
+
+
 
 
