@@ -1,0 +1,73 @@
+from flask import Flask, render_template, request, jsonify
+import json
+
+app = Flask(__name__)
+
+# Mock veri yükle
+with open('mock_data.json', 'r') as f:
+    providers = json.load(f)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    # Kullanıcı inputları al
+    energy_need = float(request.form.get('energy', 0))
+    budget = float(request.form.get('budget', 0))
+
+    # Basit puanlama algoritması: ESG skoru ve fiyat
+    scored = []
+    for p in providers:
+        score = p['esg_score'] - p['price_per_mwh']
+        if p['price_per_mwh'] * energy_need <= budget:
+            scored.append({**p, 'score': score})
+
+    # Skora göre sırala ve en iyi 2 sonucu al
+    top = sorted(scored, key=lambda x: x['score'], reverse=True)[:2]
+    return jsonify(top)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+Flask==2.3.2
+
+
+# EcoEnergy Agent
+
+AI-powered assistant for purchasing renewable energy certificates (EKOenergy, I-REC, GOO, etc.).
+
+## Overview
+EcoEnergy Agent is an intelligent AI tool that automates the process of purchasing renewable energy certificates for companies, SMEs, and individuals. It gathers the user’s energy needs and budget, searches global providers, compares prices and sustainability standards, and presents the best options. Upon approval, it initiates the purchase and provides renewal reminders.
+
+## Key Features
+- **Automated Research:** Finds and compares renewable energy certificate providers worldwide.
+- **Sustainability Scoring:** Evaluates providers based on ESG and environmental impact.
+- **Seamless Purchase Flow:** Initiates and manages certificate purchases with minimal user input.
+- **Renewal Management:** Tracks expiration dates and sends proactive reminders.
+
+## Demo
+1. Run the Flask app:
+```bash
+python app.py
+
+
+ecoenergy-agent/
+│
+├─ app.py
+├─ mock_data.json
+├─ requirements.txt
+└─ templates/
+    └─ index.html
+
+
+
+---
+
+Bu README ile:  
+- Projenin **amaç, özellik, demo adımları ve teknik detayları** net bir şekilde gösteriliyor.  
+- Hackathon ve portfolyo odaklı açıklama sayesinde işverenler için etkileyici bir örnek hâline geliyor.  
+
+---
+
