@@ -1,0 +1,8 @@
+ecoenergy-agent/
+│
+├─ app.py
+├─ mock_data.json
+├─ requirements.txt
+├─ templates/
+│   └─ index.html
+└─ README.md
